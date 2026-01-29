@@ -1,6 +1,7 @@
-import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: ".env" });
+
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests", // or './tests' — wherever you chose
@@ -10,13 +11,21 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html", // or 'list', 'dot', 'github'
 
+  // use: {
+  //   baseURL: process.env.UI_BASE_URL, // ← very important for Angular
+  //   trace: "on-first-retry", // or 'on', 'retain-on-failure'
+  //   screenshot: "only-on-failure",
+  //   video: "retain-on-failure",
+  // },
   use: {
-    baseURL: process.env.UI_BASE_URL, // ← very important for Angular
-    trace: "on-first-retry", // or 'on', 'retain-on-failure'
+    headless: false, // REQUIRED for Power BI
+    viewport: { width: 1440, height: 900 },
+    actionTimeout: 30_000,
+    navigationTimeout: 60_000,
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    trace: "on-first-retry",
   },
-
   // Crucial: start Angular dev server automatically
   webServer: {
     command: "ng serve --port 4200",

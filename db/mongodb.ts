@@ -5,7 +5,10 @@ let client: MongoClient;
 let db: Db;
 
 export async function connectMongo(): Promise<Db> {
+  console.log('before');
+
   if (db) return db;
+  console.log('after');
 
   client = new MongoClient(process.env.MONGO_URI!);
   await client.connect();
@@ -21,7 +24,8 @@ export async function closeMongo() {
 // db/mongodb.ts
 export async function getAllProducts() {
   const db = await connectMongo();
-
+  console.log(db);
+  
   return db.collection("products").find().toArray();
 }
 
